@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ activateUser }) => {
+  const navigate = useNavigate();
   const initialFormData = {
     user: "",
     password: "",
@@ -24,6 +26,7 @@ const LoginForm = ({ activateUser }) => {
     activateUser(formData.user);
     // cleanup -> resets form after submit
     setFormData(initialFormData);
+    navigate("/messages");
   };
   return (
     <>

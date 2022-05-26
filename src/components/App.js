@@ -32,15 +32,15 @@ const App = () => {
     setMessageList((messageList) => [message, ...messageList]);
   };
 
-  function nextId(data) {
-    //first exculde the empty data case.
-    if (data.length === 0) return 1;
+  // function nextId(data) {
+  //   //first exculde the empty data case.
+  //   if (data.length === 0) return 1;
 
-    //second handle if data is not empty
-    const sortData = data.sort((a, b) => a.id - b.id);
-    const nextId = sortData[sortData.length - 1].id + 1;
-    return nextId;
-  }
+  //   //second handle if data is not empty
+  //   const sortData = data.sort((a, b) => a.id - b.id);
+  //   const nextId = sortData[sortData.length - 1].id + 1;
+  //   return nextId;
+  // }
 
   useEffect(() => {
     //fetch

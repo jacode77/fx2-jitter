@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import LoginForm from "./LoginForm";
 import MessageForm from "./MessageForm";
 import Messages from "./Messages";
@@ -13,24 +13,29 @@ import {
 import About from "./About";
 import NotFound from "./NotFound";
 import MessageDetail from "./MessageDetail";
+import { reducer } from "../utils/reducer";
+import { StateContext } from "../utils/stateContext";
 
 const App = () => {
-  const [loggedInUser, setLoggedInUser] = useState("");
-  const [messageList, setMessageList] = useState([]);
-
-  const activateUser = (username) => {
-    setLoggedInUser(username);
+  // useReducer handles all the states in the same object
+  const initialState = {
+    // defines the initial message list to an empty array
+    messageList: [],
+    loggedInUser: "",
   };
 
-  const addMessage = (text) => {
-    const message = {
-      text: text,
-      user: loggedInUser,
-      id: messageList[0].id + 1, //nextId(messageList),
-    };
-    // destructures the list and adds one to the end
-    setMessageList((messageList) => [message, ...messageList]);
-  };
+  // useReducer is a function with two arguments:
+  // reducer -> is the function that is executed when...
+  // state
+  // it returns an array with 2 elements:
+  // 1. store (name for the state),
+  // 2. dispatch (function that triggers reducer function. Argument is action)
+  const [store, dispatch] = useReducer(reducer, initialState);
+  // destructures the store (provides state)
+  const { loggedInUser } = store;
+
+  // const [loggedInUser, setLoggedInUser] = useState("");
+  // const [messageList, setMessageList] = useState([]);
 
   // function nextId(data) {
   //   //first exculde the empty data case.
@@ -44,59 +49,45 @@ const App = () => {
 
   useEffect(() => {
     //fetch
-    setMessageList(initialMessageList);
+    // setMessageList(initialMessageList);
+    dispatch({
+      type: "setMessageList",
+      // we want to send the value of the message list, which is in the json file
+      data: initialMessageList,
+    });
   }, []);
 
   return (
     <div>
       <h1>Jitter</h1>
-
-      {/* removes login fields when user logged in && replaces with textfield*/}
-      {/* {!loggedInUser ? (
-        <LoginForm activateUser={activateUser} />
-      ) : (
-        <MessageForm loggedInUser={loggedInUser} addMessage={addMessage} />
-      )}
-      <Messages messageList={messageList} /> */}
-      <Router>
-        {/* 'Navigation' is in the browser router because it uses the Link component*/}
-        <Navigation loggedInUser={loggedInUser} activateUser={activateUser} />
-        <Routes>
-          {/* 'Navigate' redirects the page to where you want */}
-          <Route path="/" element={<Navigate to="messages" replace />} />
-          {/* No element rendering in "messages" path  to make it a general route whereby other routes can be nested - below */}
-          <Route path="messages">
-            {/* It is required here instead as this is the element that will be rendered */}
-            <Route index element={<Messages messageList={messageList} />} />
-            <Route
-              path="new"
-              element={
-                // add logic to prevent sneaky work arounds
-                loggedInUser ? (
-                  <MessageForm
-                    loggedInUser={loggedInUser}
-                    // addMessage is the prop
-                    addMessage={addMessage}
-                  />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            {/* Routes to individual message, which is passed a prop of messageList so the message list can be accessed*/}
-            <Route
-              path=":messageId"
-              element={<MessageDetail messageList={messageList} />}
-            />
-          </Route>
-          <Route path="about" element={<About />} />
-          <Route
-            path="login"
-            element={<LoginForm activateUser={activateUser} />}
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+      {/* Wrap all the components that use global state including loggedInUser and messageList in state contsxt provider */}
+      <StateContext.Provider value={{ store, dispatch }}>
+        <Router>
+          {/* 'Navigation' is in the browser router because it uses the Link component*/}
+          <Navigation />
+          <Routes>
+            {/* 'Navigate' redirects the page to where you want */}
+            <Route path="/" element={<Navigate to="messages" replace />} />
+            {/* No element rendering in "messages" path  to make it a general route whereby other routes can be nested - below */}
+            <Route path="messages">
+              {/* It is required here instead as this is the element that will be rendered */}
+              <Route index element={<Messages />} />
+              <Route
+                path="new"
+                element={
+                  // add logic to prevent sneaky work arounds
+                  loggedInUser ? <MessageForm /> : <Navigate to="/login" />
+                }
+              />
+              {/* Routes to individual message, which is passed a prop of messageList so the message list can be accessed*/}
+              <Route path=":messageId" element={<MessageDetail />} />
+            </Route>
+            <Route path="about" element={<About />} />
+            <Route path="login" element={<LoginForm />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </StateContext.Provider>
     </div>
   );
 };

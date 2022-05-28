@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import LoginForm from "./LoginForm";
 import MessageForm from "./MessageForm";
 import Messages from "./Messages";
@@ -13,23 +13,52 @@ import {
 import About from "./About";
 import NotFound from "./NotFound";
 import MessageDetail from "./MessageDetail";
+import { reducer } from "../utils/reducer";
 
 const App = () => {
-  const [loggedInUser, setLoggedInUser] = useState("");
-  const [messageList, setMessageList] = useState([]);
+  // useReducer handles all the states in the same object
+  const initialState = {
+    // defines the initial message list to an empty array
+    messageList: [],
+    loggedInUser: "",
+  };
+
+  // useReducer is a function with two arguments:
+  // reducer -> is the function that is executed when...
+  // state
+  // it returns an array with 2 elements:
+  // 1. store (name for the state),
+  // 2. dispatch (function that triggers reducer function. Argument is action)
+  const [store, dispatch] = useReducer(reducer, initialState);
+  // destructures the store
+  const { messageList, loggedInUser } = store;
+
+  // const [loggedInUser, setLoggedInUser] = useState("");
+  // const [messageList, setMessageList] = useState([]);
 
   const activateUser = (username) => {
-    setLoggedInUser(username);
+    // setLoggedInUser(username);
+    // instead of setting the state for loggedin user we need a dispatch
+    dispatch({
+      type: "setLoggedInUser",
+      // takes in username as its data as it's taken in as a prop that contains the username
+      data: username,
+    });
   };
 
   const addMessage = (text) => {
     const message = {
+      id: messageList[0].id + 1, //nextId(messageList)
       text: text,
       user: loggedInUser,
-      id: messageList[0].id + 1, //nextId(messageList),
     };
     // destructures the list and adds one to the end
-    setMessageList((messageList) => [message, ...messageList]);
+    // setMessageList((messageList) => [message, ...messageList]);
+
+    dispatch({
+      type: "addMessage",
+      data: message,
+    });
   };
 
   // function nextId(data) {
@@ -44,7 +73,12 @@ const App = () => {
 
   useEffect(() => {
     //fetch
-    setMessageList(initialMessageList);
+    // setMessageList(initialMessageList);
+    dispatch({
+      type: "setMessageList",
+      // we want to send the value of the message list, which is in the json file
+      data: initialMessageList,
+    });
   }, []);
 
   return (

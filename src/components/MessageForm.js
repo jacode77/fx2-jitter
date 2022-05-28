@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGlobalState } from "../utils/stateContext";
 
-const MessageForm = ({ loggedInUser, addMessage }) => {
+const MessageForm = () => {
+  const { store, dispatch } = useGlobalState();
+  const { loggedInUser, messageList } = store;
   const navigate = useNavigate();
   const initialFormData = {
     text: "",
@@ -29,6 +32,21 @@ const MessageForm = ({ loggedInUser, addMessage }) => {
       cleanMessage();
       navigate("/messages");
     }
+  };
+
+  const addMessage = (text) => {
+    const message = {
+      id: messageList[0].id + 1, //nextId(messageList)
+      text: text,
+      user: loggedInUser,
+    };
+    // destructures the list and adds one to the end
+    // setMessageList((messageList) => [message, ...messageList]);
+
+    dispatch({
+      type: "addMessage",
+      data: message,
+    });
   };
 
   const cleanMessage = () => {

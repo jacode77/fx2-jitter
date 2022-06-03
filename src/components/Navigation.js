@@ -1,3 +1,4 @@
+import { AppBar, Toolbar, Typography, Tabs, Tab } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useGlobalState } from "../utils/stateContext";
 
@@ -20,27 +21,17 @@ const Navigation = () => {
   };
 
   return (
-    <nav>
-      <Link to="/messages">Home</Link>
-      <Link to="/about">About</Link>
-      {loggedInUser ? (
-        <>
-          {/* Provides logged in users access to 'New Message' */}
-          <Link to="/messages/new">New Message</Link>
-          {loggedInUser}
-          <Link to="/messages" onClick={logout}>
-            Logout
-          </Link>
-        </>
-      ) : (
-        <>
-          Guest
-          <Link to="/login">Login</Link>
-          {/* Since we don't have a backend setup yet, keep as link to '/login' */}
-          <Link to="/login">Sign up</Link>
-        </>
-      )}
-    </nav>
+    <AppBar position="sticky">
+      <Typography variant="h4">Jitter</Typography>
+      <Toolbar>
+        <Tabs value={false}>
+          <Tab label="Home" component={Link} to="/messages" />
+          <Tab label="About" component={Link} to="/about" />
+          {!loggedInUser && <Tab label="Login" component={Link} to="/login" />}
+          {!loggedInUser && <Tab label="Signup" component={Link} to="/login" />}
+        </Tabs>
+      </Toolbar>
+    </AppBar>
   );
 };
 

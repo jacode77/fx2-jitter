@@ -1,3 +1,4 @@
+import { Card, CardContent, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { useGlobalState } from "../utils/stateContext";
 
@@ -16,10 +17,12 @@ const MessageDetail = () => {
   return (
     <>
       {message ? (
-        <>
-          <h4>{message.text}</h4>
-          <p>{message.user}</p>
-        </>
+        <Card>
+          <CardContent>
+            <Typography variant="body1">{message.text}</Typography>
+            <Typography variant="body2">{message.user}</Typography>
+          </CardContent>
+        </Card>
       ) : (
         <>
           <p>Message not found</p>

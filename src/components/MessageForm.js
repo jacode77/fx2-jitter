@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../utils/stateContext";
@@ -69,8 +70,12 @@ const MessageForm = () => {
           ></textarea>
         </div>
 
-        <input type="submit" value="post" />
-        <button onClick={cleanMessage}>Clean Message</button>
+        <Button variant="contained" type="submit" value="post">
+          Post Message
+        </Button>
+        <Button variant="contained" onClick={cleanMessage}>
+          Clean Message
+        </Button>
       </form>
     </>
   );

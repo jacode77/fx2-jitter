@@ -15,6 +15,7 @@ import NotFound from "./NotFound";
 import MessageDetail from "./MessageDetail";
 import { reducer } from "../utils/reducer";
 import { StateContext } from "../utils/stateContext";
+import axios from "axios";
 
 const App = () => {
   // useReducer handles all the states in the same object
@@ -48,18 +49,21 @@ const App = () => {
   // }
 
   useEffect(() => {
-    //fetch
-    // setMessageList(initialMessageList);
+    // fetch("http://localhost:4000/messages")
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data));
+    // using axios for a cleaner integration
+    // axios.get("http://localhost:4000/messages").then((response) => {
+    // console.log(response.data);
     dispatch({
       type: "setMessageList",
-      // we want to send the value of the message list, which is in the json file
       data: initialMessageList,
     });
+    // });
   }, []);
 
   return (
     <div>
-      <h1>Jitter</h1>
       {/* Wrap all the components that use global state including loggedInUser and messageList in state contsxt provider */}
       <StateContext.Provider value={{ store, dispatch }}>
         <Router>

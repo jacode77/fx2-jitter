@@ -15,7 +15,7 @@ import NotFound from "./NotFound";
 import MessageDetail from "./MessageDetail";
 import { reducer } from "../utils/reducer";
 import { StateContext } from "../utils/stateContext";
-import axios from "axios";
+// import axios from "axios";
 
 const App = () => {
   // useReducer handles all the states in the same object
@@ -52,14 +52,19 @@ const App = () => {
     // fetch("http://localhost:4000/messages")
     //   .then((response) => response.json())
     //   .then((data) => console.log(data));
-    // using axios for a cleaner integration
+    // using axios for a cleaner integration to get data from the backend
     // axios.get("http://localhost:4000/messages").then((response) => {
-    // console.log(response.data);
+    //   console.log(response.data);
+    //   dispatch({
+    //     type: "setMessageList",
+    //     data: response.data,
+    //   });
+    // });
+    // setMessageList(initialMessageList)
     dispatch({
       type: "setMessageList",
       data: initialMessageList,
     });
-    // });
   }, []);
 
   return (

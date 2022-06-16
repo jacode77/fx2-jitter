@@ -59,7 +59,6 @@ const LoginForm = () => {
             onChange={handleFormData}
           />
         </div>
-        {/* <input type="submit" value="Login" /> */}
         <Button variant="contained" type="submit">
           Login
         </Button>

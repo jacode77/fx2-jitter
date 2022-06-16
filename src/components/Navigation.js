@@ -27,6 +27,17 @@ const Navigation = () => {
         <Tabs value={false}>
           <Tab label="Home" component={Link} to="/messages" />
           <Tab label="About" component={Link} to="/about" />
+          {loggedInUser && (
+            <Tab label="New message" component={Link} to="/messages/new" />
+          )}
+          {loggedInUser && (
+            <Tab
+              label="Logout"
+              onClick={logout}
+              component={Link}
+              to="/messages"
+            />
+          )}
           {!loggedInUser && <Tab label="Login" component={Link} to="/login" />}
           {!loggedInUser && <Tab label="Signup" component={Link} to="/login" />}
         </Tabs>

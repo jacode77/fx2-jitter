@@ -3,7 +3,6 @@ import LoginForm from "./LoginForm";
 import MessageForm from "./MessageForm";
 import Messages from "./Messages";
 import Navigation from "./Navigation";
-import initialMessageList from "../data/message-list.json";
 import {
   BrowserRouter as Router,
   Navigate,
@@ -15,6 +14,8 @@ import NotFound from "./NotFound";
 import MessageDetail from "./MessageDetail";
 import { reducer } from "../utils/reducer";
 import { StateContext } from "../utils/stateContext";
+import { getMessages } from "../services/messagesServices";
+import SignupForm from "./SignupForm";
 // import axios from "axios";
 
 const App = () => {
@@ -22,7 +23,9 @@ const App = () => {
   const initialState = {
     // defines the initial message list to an empty array
     messageList: [],
-    loggedInUser: "",
+    // check sessionStorage to confirm if a user is loggedin. performed through method getItem to search 'username', if false set to null
+    loggedInUser: sessionStorage.getItem("username") || null,
+    token: sessionStorage.getItem("token") || null,
   };
 
   // useReducer is a function with two arguments:
@@ -59,12 +62,19 @@ const App = () => {
     //     type: "setMessageList",
     //     data: response.data,
     //   });
-    // });
+    // pulls this data from messages.services to return the list of messages from the backend
+    getMessages()
+      .then((messages) => {
+        // triggers the reducer to display the data
+        dispatch({
+          type: "setMessageList",
+          data: messages,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     // setMessageList(initialMessageList)
-    dispatch({
-      type: "setMessageList",
-      data: initialMessageList,
-    });
   }, []);
 
   return (
@@ -93,6 +103,7 @@ const App = () => {
             </Route>
             <Route path="about" element={<About />} />
             <Route path="login" element={<LoginForm />} />
+            <Route path="signup" element={<SignupForm />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

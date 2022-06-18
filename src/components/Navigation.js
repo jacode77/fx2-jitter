@@ -10,11 +10,17 @@ const Navigation = () => {
   // setup proper logout functionality
   const logout = (e) => {
     e.preventDefault();
+    // need to clear sessionStorage so the user session doesn't persist. Clear is a better option to clear both the loggedin user and token
+    sessionStorage.clear();
+    // sessionStorage.removeItem("username");
     // clears/modifies state
     dispatch({
       type: "setLoggedInUser",
-      // takes in username as its data as it's taken in as a prop that contains the username
-      data: "",
+      data: null,
+    });
+    dispatch({
+      type: "setToken",
+      data: null,
     });
     // redirects to /messages once logged out
     navigate("/messages");
@@ -39,7 +45,9 @@ const Navigation = () => {
             />
           )}
           {!loggedInUser && <Tab label="Login" component={Link} to="/login" />}
-          {!loggedInUser && <Tab label="Signup" component={Link} to="/login" />}
+          {!loggedInUser && (
+            <Tab label="Signup" component={Link} to="/signup" />
+          )}
         </Tabs>
       </Toolbar>
     </AppBar>

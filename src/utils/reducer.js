@@ -28,7 +28,7 @@ export const reducer = (state, action) => {
       return {
         // spread operator updates the destructured state
         ...state,
-        // action.data allows us to access the data and assigns/updates the data to messageList
+        // action.data allows us to access the data and assigns/updates the data in both the backend and front end
         messageList: action.data,
       };
     }
@@ -47,6 +47,14 @@ export const reducer = (state, action) => {
         ...state,
         // action.data takes the new data (username) and '...state.messageList' destructures the message list and includes it after newest message
         loggedInUser: action.data,
+      };
+    }
+
+    case "setToken": {
+      // updates the token value
+      return {
+        ...state,
+        token: action.data,
       };
     }
     // If any of the above cases above don't work, return state as default

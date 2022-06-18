@@ -1,11 +1,12 @@
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createMessage } from "../services/messagesServices";
 import { useGlobalState } from "../utils/stateContext";
 
 const MessageForm = () => {
   const { store, dispatch } = useGlobalState();
-  const { loggedInUser, messageList } = store;
+  const { loggedInUser } = store;
   const navigate = useNavigate();
   const initialFormData = {
     text: "",
@@ -28,25 +29,28 @@ const MessageForm = () => {
       console.log("Empty message");
     } else {
       console.log(formData);
-      // adds message to the list
-      addMessage(formData.text);
+      // adds message object to the list
+      addMessage(formData);
       cleanMessage();
       navigate("/messages");
     }
   };
 
-  const addMessage = (text) => {
-    const message = {
-      id: messageList[0].id + 1, //nextId(messageList)
-      text: text,
-      user: loggedInUser,
-    };
+  const addMessage = (data) => {
+    // const message = {
+    //   // no longer need id as it's stored in the backend
+    //   id: messageList[0].id + 1, //nextId(messageList)
+    //   text: text,
+    //   // no longer need username as it's stored in the backend
+    //   username: loggedInUser,
+    // };
     // destructures the list and adds one to the end
     // setMessageList((messageList) => [message, ...messageList]);
-
-    dispatch({
-      type: "addMessage",
-      data: message,
+    createMessage(data).then((message) => {
+      dispatch({
+        type: "addMessage",
+        data: message,
+      });
     });
   };
 

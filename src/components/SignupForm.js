@@ -1,15 +1,17 @@
 import { Button, InputLabel, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signIn } from "../services/authServices";
 import { useGlobalState } from "../utils/stateContext";
+import { signUp } from "../services/authServices";
 
-const LoginForm = () => {
+const SignupForm = () => {
   const { dispatch } = useGlobalState();
   const navigate = useNavigate();
   const initialFormData = {
+    username: "",
     email: "",
     password: "",
+    password_confirmation: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
@@ -28,34 +30,51 @@ const LoginForm = () => {
     // console.log("you clicked submit");
     // console.log(formData);
     // activateUser(formData.user);
-    signIn(formData).then(({ username, jwt }) => {
-      // set session storage
-      sessionStorage.setItem("username", username);
-      sessionStorage.setItem("token", jwt);
-      dispatch({
-        type: "setLoggedInUser",
-        // takes in email as its data as it's taken in as a prop that contains the email
-        data: username,
+    // add form data so the data is passed in
+    signUp(formData)
+      .then(({ username, jwt }) => {
+        // maintains the state at user signup
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("token", jwt);
+        dispatch({
+          type: "setLoggedInUser",
+          // takes in username as its data as it's taken in as a prop that contains the username
+          data: username,
+        });
+        dispatch({
+          type: "setToken",
+          // takes in username as its data as it's taken in as a prop that contains the username
+          data: jwt,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-      dispatch({
-        type: "setToken",
-        // takes in email as its data as it's taken in as a prop that contains the email
-        data: jwt,
-      });
-    });
 
     // cleanup -> resets form after submit
     setFormData(initialFormData);
     navigate("/messages");
   };
+
   return (
     <>
-      <Typography variant="h4">Login User</Typography>
+      <Typography variant="h4">Register User</Typography>
       <form onSubmit={handleSubmit}>
+        <div>
+          <InputLabel htmlFor="email">Username:</InputLabel>
+          <TextField
+            type="text"
+            // must update the name/id correctly or cannot type in form field
+            name="username"
+            id="username"
+            value={formData.username}
+            onChange={handleFormData}
+          />
+        </div>
         <div>
           <InputLabel htmlFor="email">Email:</InputLabel>
           <TextField
-            type="email"
+            type="text"
             name="email"
             id="email"
             value={formData.email}
@@ -72,12 +91,22 @@ const LoginForm = () => {
             onChange={handleFormData}
           />
         </div>
+        <div>
+          <InputLabel htmlFor="password">Password Confirmation:</InputLabel>
+          <TextField
+            type="password"
+            name="password_confirmation"
+            id="password_confirmation"
+            value={formData.password_confirmation}
+            onChange={handleFormData}
+          />
+        </div>
         <Button variant="contained" type="submit">
-          Login
+          Sign up
         </Button>
       </form>
     </>
   );
 };
 
-export default LoginForm;
+export default SignupForm;

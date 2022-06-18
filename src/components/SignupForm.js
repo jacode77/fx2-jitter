@@ -43,7 +43,6 @@ const SignupForm = () => {
         });
         dispatch({
           type: "setToken",
-          // takes in username as its data as it's taken in as a prop that contains the username
           data: jwt,
         });
       })

@@ -6,6 +6,7 @@ const jitterAPI = axios.create({
   baseURL: "http://localhost:4000",
 });
 
+// to get/post etc we need to add this info for user authentication and session storage
 jitterAPI.interceptors.request.use((req) => {
   // send the token in the request
   // generates token from sessionStorage

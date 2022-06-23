@@ -15,3 +15,15 @@ export async function createMessage(data) {
   console.log(response.data);
   return response.data;
 }
+
+// this returns the message list from the backend of logged in user
+export async function getMyMessages() {
+  const response = await jitterAPI.get("/messages/mymessages");
+  return response.data;
+}
+
+// this returns the message list from the backend of searchable users
+export async function getMessageByUser(username) {
+  const response = await jitterAPI.get(`/messages?username=${username}`);
+  return response.data;
+}

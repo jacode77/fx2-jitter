@@ -100,6 +100,7 @@ const App = () => {
               />
               {/* Routes to individual message, which is passed a prop of messageList so the message list can be accessed*/}
               <Route path=":messageId" element={<MessageDetail />} />
+              <Route path="mymessages" element={<Messages />} />
             </Route>
             <Route path="about" element={<About />} />
             <Route path="login" element={<LoginForm />} />

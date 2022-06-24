@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Typography, Tabs, Tab } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { getMyMessages } from "../services/messagesServices";
+// import { getMyMessages } from "../services/messagesServices";
 import { useGlobalState } from "../utils/stateContext";
 
 const Navigation = () => {
@@ -27,19 +27,20 @@ const Navigation = () => {
     navigate("/messages");
   };
 
-  const myMessages = () => {
-    getMyMessages()
-      .then((messages) => {
-        // triggers the reducer to display the data
-        dispatch({
-          type: "setMessageList",
-          data: messages,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // runs api call to get my messages
+  // const myMessages = () => {
+  //   getMyMessages()
+  //     .then((messages) => {
+  //       // triggers the reducer to display the data
+  //       dispatch({
+  //         type: "setMessageList",
+  //         data: messages,
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   return (
     <AppBar position="sticky">
@@ -55,7 +56,6 @@ const Navigation = () => {
             <Tab
               label="My messages"
               component={Link}
-              onClick={myMessages}
               to="/messages/mymessages"
             />
           )}

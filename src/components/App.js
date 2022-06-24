@@ -14,9 +14,8 @@ import NotFound from "./NotFound";
 import MessageDetail from "./MessageDetail";
 import { reducer } from "../utils/reducer";
 import { StateContext } from "../utils/stateContext";
-import { getMessages } from "../services/messagesServices";
 import SignupForm from "./SignupForm";
-// import axios from "axios";
+import { getMessages } from "../services/messagesServices";
 
 const App = () => {
   // useReducer handles all the states in the same object
@@ -52,29 +51,14 @@ const App = () => {
   // }
 
   useEffect(() => {
-    // fetch("http://localhost:4000/messages")
-    //   .then((response) => response.json())
-    //   .then((data) => console.log(data));
-    // using axios for a cleaner integration to get data from the backend
-    // axios.get("http://localhost:4000/messages").then((response) => {
-    //   console.log(response.data);
-    //   dispatch({
-    //     type: "setMessageList",
-    //     data: response.data,
-    //   });
-    // pulls this data from messages.services to return the list of messages from the backend
     getMessages()
       .then((messages) => {
-        // triggers the reducer to display the data
         dispatch({
           type: "setMessageList",
           data: messages,
         });
       })
-      .catch((error) => {
-        console.log(error);
-      });
-    // setMessageList(initialMessageList)
+      .catch((e) => console.log(e));
   }, []);
 
   return (
@@ -101,6 +85,7 @@ const App = () => {
               {/* Routes to individual message, which is passed a prop of messageList so the message list can be accessed*/}
               <Route path=":messageId" element={<MessageDetail />} />
               <Route path="mymessages" element={<Messages />} />
+              <Route path="user/:username" element={<Messages />} />
             </Route>
             <Route path="about" element={<About />} />
             <Route path="login" element={<LoginForm />} />

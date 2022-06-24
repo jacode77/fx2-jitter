@@ -32,7 +32,6 @@ const MessageForm = () => {
       // adds message object to the list
       addMessage(formData);
       cleanMessage();
-      navigate("/messages");
     }
   };
 
@@ -51,6 +50,8 @@ const MessageForm = () => {
         type: "addMessage",
         data: message,
       });
+      // navigate after dispatch is done so new message renders when the page reloads
+      navigate("/messages");
     });
   };
 

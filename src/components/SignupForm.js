@@ -14,6 +14,7 @@ const SignupForm = () => {
     password_confirmation: "",
   };
   const [formData, setFormData] = useState(initialFormData);
+  const [error, setError] = useState(null);
 
   //   updates the user with each letter typed. Functions combine user/password
   const handleFormData = (e) => {
@@ -32,32 +33,46 @@ const SignupForm = () => {
     // activateUser(formData.user);
     // add form data so the data is passed in
     signUp(formData)
-      .then(({ username, jwt }) => {
-        // maintains the state at user signup
-        sessionStorage.setItem("username", username);
-        sessionStorage.setItem("token", jwt);
-        dispatch({
-          type: "setLoggedInUser",
-          // takes in username as its data as it's taken in as a prop that contains the username
-          data: username,
-        });
-        dispatch({
-          type: "setToken",
-          data: jwt,
-        });
+      .then((user) => {
+        console.log(user);
+        let errorMessage = "";
+        // if there is an error with user then error will print
+        if (user.error) {
+          console.log(user.error);
+          // convert the object into a string
+          Object.keys(user.error).forEach((key) => {
+            // console.log(key, user.error[key]);
+            errorMessage = errorMessage.concat("", `${key} ${user.error[key]}`);
+          });
+          setError(errorMessage);
+          // oterwise render all data
+        } else {
+          // maintains the state at user signup
+          sessionStorage.setItem("username", user.username);
+          sessionStorage.setItem("token", user.jwt);
+          dispatch({
+            type: "setLoggedInUser",
+            // takes in username as its data as it's taken in as a prop that contains the username
+            data: user.username,
+          });
+          dispatch({
+            type: "setToken",
+            data: user.jwt,
+          });
+          // cleanup -> resets form after submit
+          setFormData(initialFormData);
+          navigate("/messages");
+        }
       })
       .catch((error) => {
         console.log(error);
       });
-
-    // cleanup -> resets form after submit
-    setFormData(initialFormData);
-    navigate("/messages");
   };
 
   return (
     <>
       <Typography variant="h4">Register User</Typography>
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <InputLabel htmlFor="email">Username:</InputLabel>

@@ -12,6 +12,7 @@ const LoginForm = () => {
     password: "",
   };
   const [formData, setFormData] = useState(initialFormData);
+  const [error, setError] = useState(null);
 
   //   updates the user with each letter typed. Functions combine user/password
   const handleFormData = (e) => {
@@ -28,29 +29,36 @@ const LoginForm = () => {
     // console.log("you clicked submit");
     // console.log(formData);
     // activateUser(formData.user);
-    signIn(formData).then(({ username, jwt }) => {
-      // set session storage
-      sessionStorage.setItem("username", username);
-      sessionStorage.setItem("token", jwt);
-      dispatch({
-        type: "setLoggedInUser",
-        // takes in email as its data as it's taken in as a prop that contains the email
-        data: username,
-      });
-      dispatch({
-        type: "setToken",
-        // takes in email as its data as it's taken in as a prop that contains the email
-        data: jwt,
-      });
+    signIn(formData).then((user) => {
+      console.log(user);
+      if (user.error) {
+        setError(user.error);
+      } else {
+        // to clear the error if previously triggered
+        setError(null);
+        // set session storage
+        sessionStorage.setItem("username", user.username);
+        sessionStorage.setItem("token", user.jwt);
+        dispatch({
+          type: "setLoggedInUser",
+          // takes in email as its data as it's taken in as a prop that contains the email
+          data: user.username,
+        });
+        dispatch({
+          type: "setToken",
+          // takes in email as its data as it's taken in as a prop that contains the email
+          data: user.jwt,
+        });
+        // cleanup -> resets form after submit
+        setFormData(initialFormData);
+        navigate("/messages");
+      }
     });
-
-    // cleanup -> resets form after submit
-    setFormData(initialFormData);
-    navigate("/messages");
   };
   return (
     <>
       <Typography variant="h4">Login User</Typography>
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <InputLabel htmlFor="email">Email:</InputLabel>

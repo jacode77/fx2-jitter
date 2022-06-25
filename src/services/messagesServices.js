@@ -12,7 +12,6 @@ export async function getMessages() {
 // adds new message to the backend. Need to pass data as a parameter so the backend receives
 export async function createMessage(data) {
   const response = await jitterAPI.post("/messages", data);
-  console.log(response.data);
   return response.data;
 }
 

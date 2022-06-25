@@ -26,9 +26,7 @@ const MessageForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (e.target.value === "") {
-      console.log("Empty message");
     } else {
-      console.log(formData);
       // adds message object to the list
       addMessage(formData);
       cleanMessage();

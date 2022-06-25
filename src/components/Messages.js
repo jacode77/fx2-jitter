@@ -15,8 +15,6 @@ const Messages = () => {
   // location hook
   const location = useLocation();
   const params = useParams();
-  console.log(params);
-  console.log(location);
 
   useEffect(() => {
     if (location.pathname === "/messages/mymessages") {
@@ -35,7 +33,6 @@ const Messages = () => {
     } else if (params.username) {
       getMessageByUser(params.username)
         .then((messages) => {
-          console.log(messages);
           if (messages.error) {
             setError(`${params.username} doesn't exist`);
             dispatch({
@@ -54,7 +51,6 @@ const Messages = () => {
           console.log(error);
         });
     } else {
-      console.log("skadiddle doo comes after the new message");
       // pulls this data from messages.services to return the list of messages from the backend
       getMessages()
         .then((messages) => {

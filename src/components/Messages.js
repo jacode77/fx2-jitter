@@ -66,7 +66,9 @@ const Messages = () => {
     }
 
     // will trigger each time location changes, checking the if statement again
+    // eslint-disable-next-line
   }, [location]);
+
   return (
     <>
       {error && <p>{error}</p>}
